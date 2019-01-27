@@ -254,6 +254,12 @@
 		return
 	. = charges_used
 
+	if(istype(target, /obj/item/gun_attachment) || (istype(target, /obj/item/gun/energy/frame) || istype(target, /obj/item/gun/ballistic/frame)))
+		user << "You spray paint [target]."
+		target.color = list(paint_color, paint_color, paint_color, rgb(0,0,0))
+		playsound(user.loc, 'sound/effects/spray.ogg', 5, 1, 5)
+		return
+
 	if(istype(target, /obj/effect/decal/cleanable))
 		target = target.loc
 
