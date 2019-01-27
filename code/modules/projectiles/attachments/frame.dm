@@ -6,7 +6,7 @@
 	icon_state = "frame_energy"
 	charge_sections = 2
 	ammo_type = list()
-	unique_rename = 1
+	obj_flags = UNIQUE_RENAME
 	var/battery_state = "battery_normal"
 
 /obj/item/gun/energy/frame/New()
@@ -18,22 +18,22 @@
 
 /obj/item/gun/energy/frame/testing/high
 	name = "high energy gun frame"
-	cell_type = /obj/item/stock_parts/cell/guncrafthigh
+	cell_type = /obj/item/stock_parts/cell/high
 	battery_state = "battery_high"
 
 /obj/item/gun/energy/frame/testing/super
 	name = "super energy gun frame"
-	cell_type = /obj/item/stock_parts/cell/guncraftsuper
+	cell_type = /obj/item/stock_parts/cell/super
 	battery_state = "battery_super"
 
 /obj/item/gun/energy/frame/testing/hyper
 	name = "hyper energy gun frame"
-	cell_type = /obj/item/stock_parts/cell/guncrafthyper
+	cell_type = /obj/item/stock_parts/cell/hyper
 	battery_state = "battery_hyper"
 
 /obj/item/gun/energy/frame/testing/bluespace
 	name = "bluespace energy gun frame"
-	cell_type = /obj/item/stock_parts/cell/guncraftbluespace
+	cell_type = /obj/item/stock_parts/cell/bluespace
 	battery_state = "battery_bluespace"
 
 
@@ -43,7 +43,7 @@
 	customizable_type = CUSTOMIZABLE_PROJECTILE
 	icon = 'icons/obj/guncrafting/ausops_new.dmi'
 	icon_state = "frame_projectile"
-	unique_rename = 1
+	obj_flags = UNIQUE_RENAME
 	spawnwithmagazine = 0
 	var/random_frame = 1
 
@@ -58,7 +58,7 @@
 	customizable_type = CUSTOMIZABLE_REVOLVER
 	icon = 'icons/obj/guncrafting/ausops_new.dmi'
 	icon_state = "frame_revolver"
-	unique_rename = 1
+	obj_flags = UNIQUE_RENAME
 	spawnwithmagazine = 0
 	random_frame = 0
 

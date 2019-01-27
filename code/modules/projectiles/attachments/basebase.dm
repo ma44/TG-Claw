@@ -65,11 +65,11 @@
 		if(CUSTOMIZABLE_ENERGY)
 			var/obj/item/gun/energy/E = owner
 			E.ammo_type = list()
-			if(!E.power_supply)
+			if(!E.cell)
 				if(E.cell_type)
-					E.power_supply = new E.cell_type(E)
+					E.cell = new E.cell_type(E)
 				else
-					E.power_supply = new(E)
+					E.cell = new(E)
 	owner.base = null
 	owner.item_state = initial(owner.item_state)
 	if(istype(owner.loc, /mob/living/carbon))

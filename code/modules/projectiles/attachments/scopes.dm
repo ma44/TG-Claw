@@ -1,6 +1,6 @@
 /obj/item/gun_attachment/scope
 	var/range = 3
-	not_okay = /obj/item/weapon/gun_attachment/scope
+	not_okay = /obj/item/gun_attachment/scope
 	no_revolver = 0
 
 /obj/item/gun_attachment/scope/on_attach(var/obj/item/gun/owner)

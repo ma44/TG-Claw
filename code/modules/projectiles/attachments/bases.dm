@@ -88,13 +88,13 @@
 	icon_state = "disable"
 	energy_type = list(/obj/item/ammo_casing/energy/disabler)
 	the_item_state = "disabler4"
-
+/*
 /obj/item/gun_attachment/base/bee
 	gun_type = CUSTOMIZABLE_ENERGY
 	name = "It's Hip To Shoot Bees Energy Base"
 	icon_state = "bees"
 	energy_type = list(/obj/item/ammo_casing/energy/bee)
-
+*/
 /obj/item/gun_attachment/base/xray
 	gun_type = CUSTOMIZABLE_ENERGY
 	name = "X-Ray Energy Base"

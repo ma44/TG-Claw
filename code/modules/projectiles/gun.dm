@@ -260,11 +260,11 @@
 					else
 						temp_icon = "[base.icon_state]0"
 				if(shot)
-					var/tempmax = (E.power_supply.maxcharge / shot.e_cost)
+					var/tempmax = (E.cell.maxcharge / shot.e_cost)
 					var/temp80 = tempmax * 0.8
 					var/temp60 = tempmax * 0.6
 					var/temp40 = tempmax * 0.4
-					var/shotsleft = round((E.power_supply.charge / shot.e_cost))
+					var/shotsleft = round((E.cell.charge / shot.e_cost))
 					if(INFINITY > shotsleft && shotsleft <= tempmax)
 						temp_icon = "[base_icon]100"
 					if(tempmax > shotsleft && shotsleft <= temp80)
@@ -457,7 +457,7 @@
 				user << "You can't attach that to [src]."
 				return
 			user << "You attach [AT] to [src]."
-			user.drop_item()
+			dropItemToGround(I)
 			AT.on_attach(src)
 			AT.forceMove(src)
 			attachments += AT
