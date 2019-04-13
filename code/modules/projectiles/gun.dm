@@ -353,7 +353,7 @@
 			for(var/obj/item/gun_attachment/A in attachments)
 				if(chambered && chambered.BB)
 					A.on_fire(src, chambered.BB)
-	chambered.BB.firing_gun = src
+	//chambered.BB.firing_gun = src
 	else
 		shoot_with_empty_chamber(user)
 		firing_burst = FALSE
@@ -457,7 +457,6 @@
 				user << "You can't attach that to [src]."
 				return
 			user << "You attach [AT] to [src]."
-			dropItemToGround(I)
 			AT.on_attach(src)
 			AT.forceMove(src)
 			attachments += AT
