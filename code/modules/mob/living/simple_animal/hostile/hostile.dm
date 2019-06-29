@@ -63,7 +63,15 @@
 /mob/living/simple_animal/hostile/handle_automated_action()
 	if(AIStatus == AI_OFF)
 		return 0
-	var/list/possible_targets = ListTargets() //we look around for potential targets and make it a list for later use.
+	var/list/possible_targets
+	if(AIStatus == AI_IDLE) //Bad deathclaw change: Try the more lazy list targets before the actual really expensive one
+		var/turf/t = get_turf(src)
+		possible_targets = ListTargetsLazy(t.z)
+	else
+		possible_targets = ListTargets() //we look around for potential targets and make it a list for later use.
+
+	if(!possible_targets)
+		return 0
 
 	if(environment_smash)
 		EscapeConfinement()
@@ -90,7 +98,7 @@
 
 //////////////HOSTILE MOB TARGETTING AND AGGRESSION////////////
 
-/mob/living/simple_animal/hostile/proc/ListTargets()//Step 1, find out what we can see
+/mob/living/simple_animal/hostile/proc/ListTargets() //Step 1, find out what we can see
 	if(!search_objects)
 		. = hearers(vision_range, targets_from) - src //Remove self, so we don't suicide
 
