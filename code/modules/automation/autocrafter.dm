@@ -10,14 +10,13 @@
 	var/datum/crafting_recipe/currentrecipe = new/datum/crafting_recipe/healpowder() //Testing purposes
 	var/datum/personal_crafting/craftproc = new //The thing that has all the procs we gotta call
 	var/obj/possible_item
-	var/inputdir = NORTH //Takes stuff from north
 	var/outputdir = SOUTH //Outputs finished stuff south
 	dir = SOUTH //Default outputs south
 
 /obj/machinery/autocrafter/examine(mob/user)
 	..()
 	to_chat(user, "<span class='notice'>This autocrafter is currently producing a recipe called [currentrecipe.name]\n</span>")
-	to_chat(user, "<span class='notice'>It's currently outputting products [outputdir] and taking ingredients from the [inputdir].</span>")
+	to_chat(user, "<span class='notice'>It's currently outputting products in the direction of [dir2text(outputdir)].</span>")
 
 /obj/machinery/autocrafter/process()
 	possible_item = craftproc.construct_item(src, currentrecipe)
@@ -28,8 +27,15 @@
 	possible_item = null
 
 /obj/machinery/autocrafter/Bumped(atom/input)
-	if(get_dir(loc, input.loc) == inputdir)
-		for(var/ingredients in currentrecipe.reqs)
-			if(istype(input, ingredients))
-				contents += input
-				break
+	for(var/ingredients in currentrecipe.reqs)
+		if(istype(input, ingredients))
+			contents += input
+			break
+
+/obj/machinery/autocrafter/attackby(obj/item/W, mob/user, params)
+	if(default_unfasten_wrench(user, W))
+		return
+
+	if(istype(W, /obj/item/multitool)) //Changes the direction of things based on direction of user
+		outputdir = get_dir(src, user)
+		to_chat(user, "You set the direction of the finished product to be placed at to face [dir2text(dir)].")
