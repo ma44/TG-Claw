@@ -18,7 +18,7 @@
 
 	if(istype(W, /obj/item/multitool)) //Changes the direction of things based on direction of user
 		outputdir = get_dir(src, user)
-		to_chat(user, "You set the direction of the finished product to be placed at to face [dir2text(dir)].")
+		to_chat(user, "You set the direction of the finished product to be placed at to face [dir2text(outputdir)].")
 
 //Checks every process() to see if it has the allowed ingredients inside of it's contents to then craft a thing
 
@@ -71,7 +71,6 @@
 
 //For testing purposes, this machine will output a patch reagent container with some of the chems
 /obj/machinery/automation/grinder/process()
-	if(reagents)
+	if(reagents.total_volume)
 		var/obj/item/reagent_containers/pill/patch/outputpatch = new(get_step(src, outputdir))
 		reagents.trans_to(outputpatch, min(reagents.total_volume, 40)) //At most 40 units of the chem into that patch
-
