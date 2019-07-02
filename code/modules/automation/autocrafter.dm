@@ -41,12 +41,14 @@
 	else
 		playsound(src, "sparks", 75, 1, -1)
 	possible_item = null
+	..()
 
 /obj/machinery/automation/autocrafter/Bumped(atom/input)
 	for(var/ingredients in currentrecipe.reqs)
 		if(istype(input, ingredients))
 			contents += input
 			break
+	..()
 
 //A test machine that grinds up a item if applicable and outputs all the results as a reagent patch
 /obj/machinery/automation/grinder
@@ -71,13 +73,70 @@
 		return //Quiet return if it was an item that could be grinded
 
 	playsound(src, "sparks", 75, 1, -1) //Errored out because the item being bumped isn't 'grindable'
+	..()
 
 //For testing purposes, this machine will output a patch reagent container with some of the chems
 /obj/machinery/automation/grinder/process()
 	if(reagents.total_volume > amount_to_transfer)
-		var/obj/item/reagent_containers/outputed_container = output_container/new(get_step(src, outputdir))
+		var/obj/item/reagent_containers/outputed_container = new output_container(get_step(src, outputdir))
 		reagents.trans_to(outputed_container, min(reagents.total_volume, amount_to_transfer)) //Transfer the chemicals
 		if(name_of_output)
 			outputed_container.name = trim(name_of_output)
 		else
 			outputed_container.name = trim(outputed_container.reagents.get_master_reagent_name() + " " + amount_to_transfer)
+	..()
+
+//A machine that takes items, puts it into a storage container then outputs it
+//Should be expanded so it can say put them into crates or wrapping paper
+/obj/machinery/automation/packager
+	name = "packager"
+	desc = "Takes items and puts them into cardboard boxes probably."
+	var/package_type = /obj/item/storage/box
+	var/obj/item/storage/current_package
+
+/obj/machinery/automation/packager/Initialize()
+	. = ..()
+	current_package = new package_type
+
+//Outputs the package and inits it again
+/obj/machinery/automation/packager/proc/output_package()
+	current_package.loc = get_step(src, output_dir)
+	current_package = new package_type
+
+/obj/machinery/automation/packager/Bumped(atom/input)
+	if(isobj(input) && (current_package.max_w_class <= input.w_class))
+		if(!current_package.handle_item_insertion(input, null, null)) //If it can't fit inside the box because not enough space, output box
+			output_package()
+			return
+	playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
+	..()
+
+//Takes input item and attempts to wrap it in wrapping paper acquired from nowhere
+/obj/machinery/automation/wrapper
+	name = "wrapper"
+	desc = "Wraps items in wrapping paper."
+
+/obj/machinery/automation/wrapper/Bumped(atom/movable/input)
+	if(input.can_be_package_wrapped())
+		if(isitem(input))
+			var/obj/item/I = input
+			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_step(src, output_dir))
+			var/size = round(I.w_class)
+			I.forceMove(P)
+			P.name = "[weightclass2text(size)] parcel"
+			P.w_class = size
+			size = min(size, 5)
+			P.icon_state = "deliverypackage[size]"
+			return
+		if(istype (target, /obj/structure/closet))
+			var/obj/structure/closet/O = target
+			if(!O.opened && O.delivery_icon)
+				var/obj/structure/bigDelivery/P = new /obj/structure/bigDelivery(get_step(src, output_dir))
+				P.icon_state = O.delivery_icon
+				O.forceMove(P)
+				P.add_fingerprint(user)
+				O.add_fingerprint(user)
+				return
+		
+	playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
+	..()
