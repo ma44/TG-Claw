@@ -64,7 +64,7 @@
 
 /obj/machinery/automation/grinder/Bumped(atom/input)
 	var/obj/item/I = input
-	if(I && I.grind_results && (reagents.total_volume != reagents.max_volume)) //We'll only grind if it's acceptable and that we don't have the max capacity hit
+	if(I && I.grind_results && (reagents.total_volume != reagents.maximum_volume)) //We'll only grind if it's acceptable and that we don't have the max capacity hit
 		reagents.add_reagent_list(I.grind_results)
 		if(I.reagents) //Any reagents already present inside besides the grind_results are transferred
 			I.reagents.trans_to(reagents, I.reagents.total_volume)
@@ -90,9 +90,10 @@
 //Should be expanded so it can say put them into crates or wrapping paper
 /obj/machinery/automation/packager
 	name = "packager"
-	desc = "Takes items and puts them into cardboard boxes probably."
+	desc = "Takes items and puts them into cardboard boxes."
 	var/package_type = /obj/item/storage/box
 	var/obj/item/storage/current_package
+	var/box_is_full = FALSE //So we can output it every process() instead of every Bumped()
 
 /obj/machinery/automation/packager/Initialize()
 	. = ..()
@@ -100,16 +101,32 @@
 
 //Outputs the package and inits it again
 /obj/machinery/automation/packager/proc/output_package()
-	current_package.loc = get_step(src, output_dir)
+	current_package.loc = get_step(src, outputdir)
+	adjust_item_drop_location(current_package)
+	playsound(loc, 'sound/machines/ping.ogg', 30, 1)
 	current_package = new package_type
+	box_is_full = FALSE
 
 /obj/machinery/automation/packager/Bumped(atom/input)
-	if(isobj(input) && (current_package.max_w_class <= input.w_class))
-		if(!current_package.handle_item_insertion(input, null, null)) //If it can't fit inside the box because not enough space, output box
-			output_package()
-			return
-	playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
+	if(isitem(input))
+		var/obj/item/item = input
+		var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
+		if(compon_storage && compon_storage.max_w_class >= item.w_class)
+			if(!SEND_SIGNAL(current_package, COMSIG_TRY_STORAGE_INSERT, item, null, FALSE, FALSE)) //If it can't fit inside the box because not enough space, output box
+				box_is_full = TRUE
+				return
+	//playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
 	..()
+
+/obj/machinery/automation/packager/process()
+	..()
+	var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
+	//Copypasta electric boogaloo
+	var/sum_w_class = 0
+	for(var/obj/item/I in compon_storage.real_location)
+		sum_w_class += I.w_class //Adds up the combined w_classes which will be in the storage item if the item is added to it.
+	if(box_is_full || compon_storage.max_combined_w_class == sum_w_class || compon_storage.real_location.contents.len == compon_storage.max_items)
+		output_package()
 
 //Takes input item and attempts to wrap it in wrapping paper acquired from nowhere
 /obj/machinery/automation/wrapper
@@ -117,26 +134,25 @@
 	desc = "Wraps items in wrapping paper."
 
 /obj/machinery/automation/wrapper/Bumped(atom/movable/input)
-	if(input.can_be_package_wrapped())
-		if(isitem(input))
-			var/obj/item/I = input
-			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_step(src, output_dir))
+	if(isitem(input))
+		var/obj/item/I = input
+		if(I.can_be_package_wrapped())
+			var/obj/item/smallDelivery/P = new /obj/item/smallDelivery(get_step(src, outputdir))
 			var/size = round(I.w_class)
 			I.forceMove(P)
 			P.name = "[weightclass2text(size)] parcel"
 			P.w_class = size
 			size = min(size, 5)
 			P.icon_state = "deliverypackage[size]"
+			adjust_item_drop_location(P)
 			return
-		if(istype (target, /obj/structure/closet))
-			var/obj/structure/closet/O = target
-			if(!O.opened && O.delivery_icon)
-				var/obj/structure/bigDelivery/P = new /obj/structure/bigDelivery(get_step(src, output_dir))
-				P.icon_state = O.delivery_icon
-				O.forceMove(P)
-				P.add_fingerprint(user)
-				O.add_fingerprint(user)
-				return
-		
+	if(istype (input, /obj/structure/closet))
+		var/obj/structure/closet/O = input
+		if(!O.opened && O.delivery_icon)
+			var/obj/structure/bigDelivery/P = new /obj/structure/bigDelivery(get_step(src, outputdir))
+			P.icon_state = O.delivery_icon
+			O.forceMove(P)
+			return
+
 	playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
 	..()
