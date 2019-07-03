@@ -123,9 +123,10 @@
 	var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
 	//Copypasta electric boogaloo
 	var/sum_w_class = 0
-	for(var/obj/item/I in compon_storage.real_location)
+	var/atom/source_real_location = compon_storage.real_location()
+	for(var/obj/item/I in source_real_location)
 		sum_w_class += I.w_class //Adds up the combined w_classes which will be in the storage item if the item is added to it.
-	if(box_is_full || compon_storage.max_combined_w_class == sum_w_class || compon_storage.real_location.contents.len == compon_storage.max_items)
+	if(box_is_full || compon_storage.max_combined_w_class == sum_w_class || source_real_location.contents.len == compon_storage.max_items)
 		output_package()
 
 //Takes input item and attempts to wrap it in wrapping paper acquired from nowhere
