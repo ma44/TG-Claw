@@ -1,0 +1,16 @@
+<ui-display title ='Automatic Grinder Machine'>
+	<ui-display title='Generic Info'>
+		<span class='content'>The machine will output <b>{{data.current_amount_to_dispense}}</b> per <b>{{data.current_output}}</b>.</span>
+		<br/>
+	
+	</ui-display>
+
+	<ui-display title='Machine Settings'>
+	
+		<ui-button action='change_item_amount_dispense' params='{"amount": 0}'>Current Item Limit til Box: {{data.dispense_at_item_amount}}</ui-button>
+		<ui-button action='change_name' params='{}'>Change the naming scheme</ui-button>
+		<br/>
+		<ui-button action='change_output' params='{}'>Change the naming scheme</ui-button>
+	</ui-display>
+
+</ui-display>
