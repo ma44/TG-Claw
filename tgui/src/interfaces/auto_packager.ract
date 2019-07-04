@@ -1,0 +1,25 @@
+<ui-display title ='Automatic Packager Machine'>
+	<ui-display title='Generic Info'>
+		{{#if data.current_package}}
+			<span class='content'>"The machine is currently putting inputted items into a <b>{{data.current_package}}</b>.</span>
+		{{else}}
+			<span class='warning'>"No package to insert items into."</span>
+		{{/if}}
+		<br/>
+		<br/>
+
+		{{#if data.dispense_at_item_amount != 0}}
+			<span class='content'>"The machine will output a box when <b>{{data.dispense_at_item_amount}}</b> items are detected in the box.</span>
+		{{else}}
+			<span class='content'>"The machine will output a box as soon as no item can fit inside of it because of a lack of storage space.</span>
+		{{/if}}
+	
+	</ui-display>
+
+	<ui-display title='Machine Settings'>
+	
+		<ui-button action='change_item_amount_dispense' params='{"amount": 0}'>Current Item Limit til Box: {{data.dispense_at_item_amount}}</ui-button>
+
+	</ui-display>
+
+</ui-display>

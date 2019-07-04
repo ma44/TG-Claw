@@ -1,4 +1,4 @@
-{{#if data.screen == "home"}}
+﻿{{#if data.screen == "home"}}
 	<ui-display title='Beaker' button>
 		<ui-button icon='{{data.isBeakerLoaded ? "Eject" : "close"}}'
 			style='{{data.isBeakerLoaded ? "selected" : null}}'
