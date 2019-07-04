@@ -43,6 +43,7 @@
 	var/list/data = list()
 	data["name_of_output"] = name_of_output
 	data["current_output"] = output_container
+	data["current_amount_to_dispense"] = amount_to_transfer
 	return data
 
 /obj/machinery/automation/packager/ui_act(action, params)
@@ -59,5 +60,9 @@
 					output_container = /obj/item/reagent_containers/pill
 				if("patch")
 					output_container = /obj/item/reagent_containers/pill/patch
+		if("change_amount")
+			var/numero = text2num(params["new_amount"])
+			if(numero && numero > 0)
+				amount_to_transfer = numero
 	update_icon()
 
