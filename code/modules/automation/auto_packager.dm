@@ -28,7 +28,6 @@
 			if(!SEND_SIGNAL(current_package, COMSIG_TRY_STORAGE_INSERT, item, null, FALSE, FALSE)) //If it can't fit inside the box because not enough space, output box
 				box_is_full = TRUE
 				return
-	//playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
 	..()
 
 /obj/machinery/automation/packager/process()

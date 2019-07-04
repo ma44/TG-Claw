@@ -1344,7 +1344,6 @@
 #include "code\modules\atmospherics\machinery\portable\scrubber.dm"
 #include "code\modules\automation\auto_crafter.dm"
 #include "code\modules\automation\auto_grinder.dm"
-#include "code\modules\automation\auto_insert.dm"
 #include "code\modules\automation\auto_packager.dm"
 #include "code\modules\automation\auto_wrapper.dm"
 #include "code\modules\automation\automation.dm"
