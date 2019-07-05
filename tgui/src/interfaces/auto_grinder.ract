@@ -2,8 +2,6 @@
 	<ui-display title='Generic Info'>
 		<span class='content'>The machine will output <b>{{data.current_amount_to_dispense}}</b> per <b>{{data.current_output}}</b>.</span>
 		<br/>
-	
-	</ui-display>
 
 	<ui-display title='Machine Settings'>
 	

@@ -48,9 +48,9 @@
 /obj/machinery/automation/chem_filter/ui_data(mob/user)
 	var/list/data = list()
 	if(current_mode)
-		data["current_mode"] = "filter into"
-	else
 		data["current_mode"] = "filter out"
+	else
+		data["current_mode"] = "filter into"
 	data["current_chem_macro"] = current_chem_macro
 	return data
 
@@ -59,15 +59,12 @@
 		return
 
 	switch(action)
-		if("toggle_mode")
-			if(current_mode)
-				current_mode = FILTER_INTO
-			else
-				current_mode = FILTER_OUT
-			. = TRUE
+		if("change_mode")
+			if(params["new_mode"] == 0 || params["new_mode"] == 1)
+				current_mode = params["new_mode"]
 
 		if("change_macro")
 			current_chem_macro = stripped_input(usr,"Recipe","Insert the chem macro with chem IDs")
 			. = TRUE
-	update_icon()
 
+	update_icon()

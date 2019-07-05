@@ -1,0 +1,21 @@
+<ui-display title ='Automatic Chemical Filteration Machine'>
+	<ui-display title='Generic Info'>
+		<span class='content'>Current macro settings: <b>{{data.current_chem_macro}}</b></span>
+		<br/>
+		<span class='content'>Current mode: <b>{{data.current_mode}}</b></span>
+
+	</ui-display>
+
+	<ui-display title='Machine Settings'>
+	
+		<ui-button action='change_macro' params='{}'>Change the macro settings</ui-button>
+		<br/>
+		{{#if data.current_mode == "filter into"}}
+			<ui-button action='change_mode' params='{"new_mode": 1}'>Switch to filtering out the macro</ui-button>
+		{{else}}
+			<ui-button action='change_mode' params='{"new_mode": 0}'>Switch to filtering into the macro</ui-button>
+		{{/if}}
+
+	</ui-display>
+
+</ui-display>
