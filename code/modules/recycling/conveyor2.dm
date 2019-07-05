@@ -138,7 +138,7 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 
 /obj/machinery/conveyor/proc/convey(list/affecting)
 	for(var/atom/movable/A in affecting)
-		if(current_item_count >= 10)
+		if(current_item_count >= 4)
 			return
 		current_item_count++
 		if((A.loc == loc) && A.has_gravity())
