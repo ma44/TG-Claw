@@ -460,10 +460,10 @@
 			update_total()
 
 //Ditto above but with advanced list technology
-/datum/reagents/proc/isolate_reagents(list/reagents_to_save)
+/datum/reagents/proc/isolate_reagents(reagents_to_save)
 	var/list/cached_reagents = reagent_list
 	for(var/datum/reagent/r in cached_reagents)
-		if(reagents_to_save.Find(r.id))
+		if(reagents_to_save[r])
 			del_reagent(r.id)
 			update_total()
 
