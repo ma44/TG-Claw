@@ -24,20 +24,17 @@
 		switch(current_mode)
 			if(FILTER_INTO)
 				var/list/reagents_to_save = process_recipe_list(current_chem_macro)
-				world << reagents_to_save
-				var/list/reagent_id_only = list()
-				for(var/r in reagents_to_save)
-					reagent_id_only += r
-				processing.reagents.isolate_reagents(reagent_id_only) //Remove all reagents not in the chem macro
-				for(var/datum/reagent/reagent_left in processing.reagents) //Then remove any excess
-					processing.reagents.remove_reagent(reagent_left.id, max(0, (processing.reagents.get_reagent_amount(reagent_left.id) - reagents_to_save[reagent_left.id]), TRUE)) //Attempt to remove excess reagent amount if there's any
+				for(var/datum/reagent/reagent in processing.reagents.reagent_list)
+					if(reagents_to_save[reagent.id])
+						processing.reagents.remove_reagent(reagent.id, max(0, processing.reagents.get_reagent_amount(reagent.id) - reagents_to_save.[reagent.id], TRUE) //Remove any excess reagent
+					else
+						processing.reagents.del_reagent(reagent.id)
 
 				playsound(loc, 'sound/machines/ping.ogg', 30, 1)
 				processing.loc = get_step(src, outputdir)
 
 			if(FILTER_OUT)
 				var/list/reagents_to_remove = process_recipe_list(current_chem_macro)
-				world << reagents_to_remove
 				for(var/r_id in reagents_to_remove)
 					processing.reagents.remove_reagent(r_id, reagents_to_remove[r_id])
 				playsound(loc, 'sound/machines/ping.ogg', 30, 1)
