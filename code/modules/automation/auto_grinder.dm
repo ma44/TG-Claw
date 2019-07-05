@@ -30,7 +30,7 @@
 		if(name_of_output)
 			outputed_container.name = trim(name_of_output)
 		else
-			outputed_container.name = trim("[outputed_container.reagents.get_master_reagent_name()] ([amount_to_transfer])")
+			outputed_container.name = trim("[outputed_container.reagents.get_master_reagent_name()] ([amount_to_transfer]u)")
 	..()
 
 /obj/machinery/automation/grinder/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)

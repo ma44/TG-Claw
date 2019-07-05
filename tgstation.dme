@@ -1342,6 +1342,7 @@
 #include "code\modules\atmospherics\machinery\portable\portable_atmospherics.dm"
 #include "code\modules\atmospherics\machinery\portable\pump.dm"
 #include "code\modules\atmospherics\machinery\portable\scrubber.dm"
+#include "code\modules\automation\auto_chem_filter.dm"
 #include "code\modules\automation\auto_crafter.dm"
 #include "code\modules\automation\auto_grinder.dm"
 #include "code\modules\automation\auto_packager.dm"

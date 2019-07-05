@@ -23,6 +23,4 @@
 			P.icon_state = O.delivery_icon
 			O.forceMove(P)
 			return
-
-	playsound(src, "sparks", 75, 1, -1) //Item being bumped is too big to be put into the storage container
 	..()

@@ -459,6 +459,14 @@
 			del_reagent(R.id)
 			update_total()
 
+//Ditto above but with advanced list technology
+/datum/reagents/proc/isolate_reagents(list/reagents_to_save)
+	var/list/cached_reagents = reagent_list
+	for(var/datum/reagent/r in cached_reagents)
+		if(reagents_to_save.Find(r.id))
+			del_reagent(r.id)
+			update_total()
+
 /datum/reagents/proc/del_reagent(reagent)
 	var/list/cached_reagents = reagent_list
 	for(var/_reagent in cached_reagents)

@@ -376,13 +376,13 @@
 		return FALSE
 	return TRUE
 
-/obj/machinery/chem_dispenser/proc/process_recipe_list(var/fucking_hell)
+/proc/process_recipe_list(var/recipe)
 	var/list/key_list = list()
 	var/list/final_list = list()
-	var/list/first_process = splittext(fucking_hell, ";")
+	var/list/first_process = splittext(recipe, ";")
 	for(var/reagents in first_process)
-		var/list/fuck = splittext(reagents, "=")
-		final_list += list(avoid_assoc_duplicate_keys(fuck[1],key_list) = text2num(fuck[2]))
+		var/list/splitreagent = splittext(reagents, "=")
+		final_list += list(avoid_assoc_duplicate_keys(splitreagent[1],key_list) = text2num(splitreagent[2]))
 	return final_list
 
 /obj/machinery/chem_dispenser/drinks/display_beaker()
