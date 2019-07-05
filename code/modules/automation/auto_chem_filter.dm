@@ -26,7 +26,7 @@
 				var/list/reagents_to_save = process_recipe_list(current_chem_macro)
 				for(var/datum/reagent/reagent in processing.reagents.reagent_list)
 					if(reagents_to_save[reagent.id])
-						processing.reagents.remove_reagent(reagent.id, max(0, processing.reagents.get_reagent_amount(reagent.id) - reagents_to_save.[reagent.id], TRUE) //Remove any excess reagent
+						processing.reagents.remove_reagent(reagent.id, 0, processing.reagents.get_reagent_amount(reagent.id) - reagents_to_save.[reagent.id], TRUE) //Remove any excess reagent
 					else
 						processing.reagents.del_reagent(reagent.id)
 
@@ -57,7 +57,7 @@
 /obj/machinery/automation/chem_filter/ui_act(action, params)
 	if(..())
 		return
-	
+
 	switch(action)
 		if("toggle_mode")
 			if(current_mode)
