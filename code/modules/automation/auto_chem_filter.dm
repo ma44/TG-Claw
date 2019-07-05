@@ -2,8 +2,8 @@
 //Takes a reagent container as a input and will remove chemicals that don't fit with the inputted chem macro
 //Alternatively, the machine can also remove certain reagents VIA chem macro input instead of making reagents like a chem macro
 
-#define FILTER_INTO 1
-#define FILTER_OUT 2
+#define FILTER_INTO 0
+#define FILTER_OUT 1
 
 /obj/machinery/automation/chem_filter
 	name = "automatic chem filter"
@@ -39,3 +39,35 @@
 					processing.reagents.remove_reagent(r_id, reagents_to_remove[r_id])
 				playsound(loc, 'sound/machines/ping.ogg', 30, 1)
 				processing.loc = get_step(src, outputdir)
+
+/obj/machinery/automation/chem_filter/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)
+  if(!ui)
+    ui = new(user, src, ui_key, "auto_chem_filter", "Automatic Chemical Filtering Machine", 600, 800, master_ui, state)
+    ui.open()
+
+/obj/machinery/automation/chem_filter/ui_data(mob/user)
+	var/list/data = list()
+	if(current_mode)
+		data["current_mode"] = "filter into"
+	else
+		data["current_mode"] = "filter out"
+	data["current_chem_macro"] = current_chem_macro
+	return data
+
+/obj/machinery/automation/chem_filter/ui_act(action, params)
+	if(..())
+		return
+	
+	switch(action)
+		if("toggle_mode")
+			if(current_mode)
+				current_mode = FILTER_INTO
+			else
+				current_mode = FILTER_OUT
+			. = TRUE
+
+		if("change_macro")
+			current_chem_macro = stripped_input(usr,"Recipe","Insert the chem macro with chem IDs")
+			. = TRUE
+	update_icon()
+
