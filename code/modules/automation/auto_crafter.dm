@@ -16,8 +16,6 @@
 	possible_item = craftproc.construct_item(src, currentrecipe)
 	if(isobj(possible_item)) //The returned one can either be null, a string or the object itself; the object itself means it's crafted
 		possible_item.loc = get_step(src, outputdir)
-	else
-		playsound(src, "sparks", 75, 1, -1)
 	possible_item = null
 	..()
 

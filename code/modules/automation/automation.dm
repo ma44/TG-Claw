@@ -7,6 +7,7 @@
 	icon = 'icons/obj/recycling.dmi'
 	icon_state = "grinder-o0"
 	density = TRUE
+	speed_process = TRUE //Every 0.2 seconds instead of 2
 
 /obj/machinery/automation/examine(mob/user)
 	..()

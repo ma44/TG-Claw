@@ -1,0 +1,12 @@
+<ui-display title ='Automatic Labeler Machine'>
+	<ui-display title='Generic Info'>
+		<span class='content'>This machine will label any item coming through this with the following: </b>{{data.current_label}}</b>.</span>
+		<br/>
+
+	<ui-display title='Machine Settings'>
+		<ui-button action='change_name' params='{}'>Change the name to be put labeled</ui-button>
+		<br/>
+
+	</ui-display>
+
+</ui-display>
