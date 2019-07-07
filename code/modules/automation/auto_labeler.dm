@@ -49,5 +49,5 @@
 
 /obj/machinery/automation/auto_label/ui_act(action, params)
 	if("change_name")
-		name_of_output = stripped_input(usr,"New label: ","Input a custom label!", "", MAX_NAME_LEN)
+		to_label_on = stripped_input(usr,"New label: ","Input a custom label!", "", MAX_NAME_LEN)
 		. = TRUE

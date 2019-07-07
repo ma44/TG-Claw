@@ -4,6 +4,7 @@
 /obj/machinery/automation
 	name = "Shouldn't exist reeeee"
 	var/outputdir = SOUTH //Outputs finished stuff south by default
+	var/list/inputdir = list(NORTH, WEST, EAST) //Any direction except the same dir of output is allowed
 	icon = 'icons/obj/recycling.dmi'
 	icon_state = "grinder-o0"
 	density = TRUE
@@ -13,10 +14,15 @@
 	..()
 	to_chat(user, "<span class='notice'>It's currently outputting products in the direction of [dir2text(outputdir)].</span>")
 
-/obj/machinery/automation/attackby(obj/item/W, mob/user, params)
-	if(default_unfasten_wrench(user, W))
-		return
+/obj/machinery/automation/Bumped(atom/input)
+	if(!((get_dir(src, input) in inputdir)))
+		return ..()
 
-	if(istype(W, /obj/item/multitool)) //Changes the direction of things based on direction of user
-		outputdir = get_dir(src, user)
-		to_chat(user, "You set the direction of the finished product to be placed at to face [dir2text(outputdir)].")
+/obj/machinery/automation/ui_data(mob/user)
+	var/list/data = list()
+	data["name_of_output"] = name_of_output
+	data["current_output"] = output_container.name
+	data["current_amount_to_dispense"] = amount_to_transfer
+	return data
+
+/obj/machinery/automation/ui_act(action, params)
