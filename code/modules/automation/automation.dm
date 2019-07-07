@@ -20,9 +20,6 @@
 
 /obj/machinery/automation/ui_data(mob/user)
 	var/list/data = list()
-	data["name_of_output"] = name_of_output
-	data["current_output"] = output_container.name
-	data["current_amount_to_dispense"] = amount_to_transfer
 	return data
 
 /obj/machinery/automation/ui_act(action, params)
