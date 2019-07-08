@@ -98,7 +98,6 @@ Centurion
 
 	outfit = /datum/outfit/job/CaesarsLegion/Legionnaire/f13centurion
 
-
 /datum/job/CaesarsLegion/Legionnaire/f13centurion/after_spawn(mob/living/carbon/human/H, mob/M)
 	H.add_quirk("Hard Yards")
 
@@ -139,7 +138,6 @@ Veteran Decan
 	exp_requirements = 1500
 
 	outfit = /datum/outfit/job/CaesarsLegion/Legionnaire/f13vetdecan
-
 
 /datum/job/CaesarsLegion/Legionnaire/f13vetdecan/after_spawn(mob/living/carbon/human/H, mob/M)
 	H.add_quirk("Hard Yards")
@@ -261,7 +259,6 @@ Vexillarius
 
 	outfit = /datum/outfit/job/CaesarsLegion/Legionnaire/f13vexillarius
 
-
 /datum/job/CaesarsLegion/Legionnaire/f13vexillarius/after_spawn(mob/living/carbon/human/H, mob/M)
 	H.add_quirk("Hard Yards")
 
@@ -301,7 +298,6 @@ Veteran
 	exp_requirements = 720
 
 	outfit = /datum/outfit/job/CaesarsLegion/Legionnaire/f13vetlegion
-
 
 /datum/job/CaesarsLegion/Legionnaire/f13vetlegion/after_spawn(mob/living/carbon/human/H, mob/M)
 	H.add_quirk("Hard Yards")
