@@ -1,0 +1,75 @@
+<ui-display title ='TEMPLATE: DO NOT USE'>
+	<ui-display title='I/O Settings'>
+		{{#if data.outputdir}}
+			<span class='content'>This machine is currently outputting in the following directions: <b>{{data.outputdir}}</b></span>
+		{{else}}
+			<span class='warning'><b>This machine is not currently outputting to any directions!</b></span>
+		{{/if}}
+
+		<br/>
+
+		{{#if data.inputdir}}
+			<span class='content'>This machine is currently inputting from the following directions: <b>{{data.inputdir}}</b></span>
+		{{else}}
+			<span class='warning'><b>This machine is not currently inputting from any directions!</b></span>
+		{{/if}}
+
+		<br/>
+		
+		{{#if "north" in data.inputdir}}
+			<ui-button action='add_input' params='{"new_dir": "north"}'style='float:center'>Disable north input</ui-button>
+		{{else}}
+			<ui-button action='remove_input' params='{"new_dir": "north"}'style='float:center'>Enable north input</ui-button>
+		{{/if}}
+
+		<span class='content'>		</span>
+
+		{{#if "north" in data.outputdir}}
+			<ui-button action='add_output' params='{"new_dir": "north"}'style='float:center'>Disable north output</ui-button>
+		{{else}}
+			<ui-button action='remove_output' params='{"new_dir": "north"}'style='float:center'>Enable north output</ui-button>
+		{{/if}}
+
+		<br/>
+
+		{{#if "west" in data.inputdir}}
+			<ui-button action='add_input' params='{"new_dir": "west"}'style='float:left'>Disable west input</ui-button>
+		{{else}}
+			<ui-button action='remove_input' params='{"new_dir": "west"}'style='float:left'>Enable west input</ui-button>
+		{{/if}}
+
+		{{#if "west" in data.outputdir}}
+			<ui-button action='add_output' params='{"new_dir": "west"}'style='float:left'>Disable west output</ui-button>
+		{{else}}
+			<ui-button action='remove_output' params='{"new_dir": "west"}'style='float:left'>Enable west output</ui-button>
+		{{/if}}
+
+		{{#if "east" in data.inputdir}}
+			<ui-button action='add_input' params='{"new_dir": "east"}'style='float:right'>Disable east input</ui-button>
+		{{else}}
+			<ui-button action='remove_input' params='{"new_dir": "east"}'style='float:right'>Enable east input</ui-button>
+		{{/if}}
+
+		{{#if "east" in data.outputdir}}
+			<ui-button action='add_output' params='{"new_dir": "east"}'style='float:right'>Disable east output</ui-button>
+		{{else}}
+			<ui-button action='remove_output' params='{"new_dir": "east"}'style='float:right'>Enable east output</ui-button>
+		{{/if}}
+
+		<br/>
+
+		{{#if "south" in data.inputdir}}
+			<ui-button action='add_input' params='{"new_dir": "south"}'style='float:center'>Disable input</ui-button>
+		{{else}}
+			<ui-button action='remove_input' params='{"new_dir": "south"}'style='float:center'>Enable input</ui-button>
+		{{/if}}
+
+		{{#if "south" in data.outputdir}}
+			<ui-button action='add_output' params='{"new_dir": "south"}'style='float:center'>Disable south output</ui-button>
+		{{else}}
+			<ui-button action='remove_output' params='{"new_dir": "south"}'style='float:center'>Enable south output</ui-button>
+		{{/if}}
+
+	</ui-display>
+
+</ui-display>

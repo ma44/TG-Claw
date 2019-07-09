@@ -1,6 +1,6 @@
 <ui-display title ='Automatic Labeler Machine'>
 	<ui-display title='Generic Info'>
-		<span class='content'>This machine will label any item coming through this with the following: </b>{{data.current_label}}</b>.</span>
+		<span class='content'>This machine will label any item coming through this with the following: <b>{{data.current_label}}</b>.</span>
 		<br/>
 
 	<ui-display title='Machine Settings'>
