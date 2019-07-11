@@ -26,10 +26,21 @@
 
 /obj/machinery/automation/ui_data(mob/user)
 	var/list/data = list()
-	for(var/dir in outputdir)
-		data["outputdir"] += "[dir2text(dir)] "
-	for(var/dir2 in inputdir)
-		data["inputdir"] += "[dir2text(dir2)] "
+	data["inputdir"] = list()
+	data["outputdir"] = list()
+	data["removed_inputdir"] = list()
+	data["removed_outputdir"] = list()
+	for(var/dir in GLOB.cardinals)
+		if(!(dir in inputdir))
+			data["removed_inputdir"] += dir2text(dir)
+		else
+			data["inputdir"] += dir2text(dir)
+
+		if(!(dir in outputdir))
+			data["removed_outputdir"] += dir2text(dir)
+		else
+			data["outputdir"] += dir2text(dir)
+
 	data["has_multi_output"] = has_multi_output
 	return data
 
@@ -38,7 +49,7 @@
 		if("add_input")
 			if(params["new_dir"] && (params["new_dir"] in GLOB.cardinals && !(params["new_dir"] in inputdir)))
 				inputdir += params["new_dir"]
-
+			log_world("fail add input")
 		if("add_output")
 			if(params["new_dir"] && (params["new_dir"] in GLOB.cardinals))
 				if(has_multi_output && !(params["new_dir"] in outputdir))
