@@ -17,3 +17,8 @@
 /obj/machinery/automation/Bumped(atom/input)
 	if(!((get_dir(src, input) in inputdir)))
 		return ..()
+
+/obj/machinery/automation/multitool_act(mob/living/user, obj/item/multitool)
+	if(get_dir(src, user) in GLOB.cardinals)
+		to_chat(user, "You set the output of the machine to [get_dir(src, user)].")
+		outputdir = list(get_dir(src, user))
