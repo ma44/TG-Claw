@@ -3,8 +3,7 @@
 //Basic parent type that handles inserting objects into itself when getting Bumped() and changing output direction with multitool
 /obj/machinery/automation
 	name = "Shouldn't exist reeeee"
-	var/list/outputdir = list(SOUTH) //Outputs finished stuff south by default
-	var/list/inputdir = list(NORTH, WEST, EAST) //Any direction except the same dir of output is allowed
+	var/outputdir = SOUTH //Outputs finished stuff south by default
 	icon = 'icons/obj/recycling.dmi'
 	icon_state = "grinder-o0"
 	density = TRUE
@@ -15,10 +14,12 @@
 	to_chat(user, "<span class='notice'>It's currently outputting products in the direction of [dir2text(outputdir)].</span>")
 
 /obj/machinery/automation/Bumped(atom/input)
-	if(!((get_dir(src, input) in inputdir)))
+	if(!((get_dir(src, input) == outputdir)))
 		return ..()
+	else
+		contents += input
 
 /obj/machinery/automation/multitool_act(mob/living/user, obj/item/multitool)
 	if(get_dir(src, user) in GLOB.cardinals)
 		to_chat(user, "You set the output of the machine to [get_dir(src, user)].")
-		outputdir = list(get_dir(src, user))
+		outputdir = get_dir(src, user)
