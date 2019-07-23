@@ -50,12 +50,26 @@
 	if(manifest)
 		add_overlay("manifest")
 
+/obj/structure/closet/crate/attackby(obj/item/W, mob/user, params)
+	if(user in src)
+		return
+	if(istype(W, /obj/item/paper/fluff/jobs/cargo/manifest) && !opened && type == /obj/structure/closet/crate)
+		manifest = W
+		W.forceMove(src)
+		to_chat(user, "You attached the [W.name] to the crate's manifest space.")
+		update_icon()
+		return
+	if(src.tool_interact(W,user))
+		return 1 // No afterattack
+	else
+		return ..()
+
 /obj/structure/closet/crate/attack_hand(mob/user)
+	if(manifest)
+		tear_manifest(user)
 	. = ..()
 	if(.)
 		return
-	if(manifest)
-		tear_manifest(user)
 
 /obj/structure/closet/crate/open(mob/living/user)
 	. = ..()
@@ -63,6 +77,8 @@
 		to_chat(user, "<span class='notice'>The manifest is torn off [src].</span>")
 		playsound(src, 'sound/items/poster_ripped.ogg', 75, 1)
 		manifest.forceMove(get_turf(src))
+		if(ishuman(user))
+			user.put_in_hands(manifest)
 		manifest = null
 		update_icon()
 
