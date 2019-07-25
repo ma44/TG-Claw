@@ -2,8 +2,27 @@
 
 /obj/machinery/automation/auto_label //Takes a recipe datum, accepts ingredients for them and makes it
 	name = "auto labeler"
-	desc = "Takes in items and labels them like a hand labeler. However if a crate is inserted, it will generate a manifest for it if it doesn't have one."
+	desc = "Takes in items and labels them like a hand labeler. However if a crate is inserted, it will generate a manifest of all contents alongside giving a label."
 	var/to_label_on = ""
+	radial_categories = list(
+	"Change Label Name"
+	)
+
+/obj/machinery/automation/auto_label/Initialize()
+	. = ..()
+	radial_categories["Change Label Name"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_label")
+
+/obj/machinery/automation/auto_label/examine(mob/user)
+	. = ..()
+	if(.)
+		to_chat(user, "<span class='notice'>Current label: <span class='bold'>[to_label_on ? to_label_on : "No label currently set!!!"]</span></span>")
+
+/obj/machinery/automation/auto_label/MakeRadial(mob/living/user)
+	var/category = show_radial_menu(user, src, radial_categories, null, require_near = TRUE)
+	if(category)
+		switch(category)
+			if("Change Label Name")
+				to_label_on = stripped_input(usr,"New label: ","Input a custom label!", "", MAX_NAME_LEN)
 
 /obj/machinery/automation/auto_label/process()
 	if(contents.len && isitem(contents[1]))

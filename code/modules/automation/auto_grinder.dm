@@ -6,9 +6,36 @@
 	var/amount_to_transfer = 10 //How many units should be dispensed into the output container
 	var/name_of_output = "" //If we want to append a custom name to the output we will, otherwise just uses default setup AKA get_master_reagent and total volume
 
+	radial_categories = list(
+	"Change Output Name",
+	"Change Transfer Rate",
+	"Change Container Output"
+	)
+
+/obj/machinery/automation/grinder/examine(mob/user)
+	. = ..()
+	if(.)
+		to_chat(user, "<span class='notice'>Current outputted name: <span class='bold'>[name_of_output ? name_of_output : "Default naming scheme"]</span></span>")
+		to_chat(user, "<span class='notice'>Units of reagents transferred to new: <span class='bold'>[amount_to_transfer ? amount_to_transfer : "No output!!!"]</span></span>")
+
+/obj/machinery/automation/grinder/MakeRadial(mob/living/user)
+	var/category = show_radial_menu(user, src, radial_categories, null, require_near = TRUE)
+	if(category)
+		switch(category)
+			if("Change Output Name")
+				name_of_output = stripped_input(usr,"Putting in nothing will use the default naming scheme (name of main reagent + unit amount)","Input a custom name!", "", MAX_NAME_LEN)
+
+			if("Change Transfer Rate")
+				amount_to_transfer = CLAMP(round(input(usr, "The max amount of reagents that can be put inside is [output_container.reagents.maximum_volume]u.", "How many units to transfer?") as num|null), 0, output_container.reagents.maximum_volume)
+
+			//if("Change Container Output")
+
+
 /obj/machinery/automation/grinder/Initialize()
 	. = ..()
 	create_reagents(10000) //Because of the way this machine would work, all of this would be constantly be outputting anyway, or you could just use this as a unpowered 1000 unit vat
+	radial_categories["Change Output Name"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_name")
+	radial_categories["Change Transfer Rate"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_transfer_rate")
 
 /obj/machinery/automation/grinder/Bumped(atom/input)
 	var/obj/item/I = input
