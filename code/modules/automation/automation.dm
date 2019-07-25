@@ -9,23 +9,34 @@
 	density = TRUE
 	speed_process = TRUE //Every 0.2 seconds instead of 2
 	var/list/radial_categories = list(
-	"I/O Settings"
 	)
 
+	/*
 	var/list/i_o_radial_options = list(
 	"Change Input",
 	"Change Output"
 	)
+	*/
 
 /obj/machinery/automation/Initialize()
 	. = ..()
+	/*
 	radial_categories["I/O Settings"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_io")
 	i_o_radial_options["Change Input"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_input")
 	i_o_radial_options["Change Output"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_output")
+	*/
 
 /obj/machinery/automation/examine(mob/user)
 	..()
-	to_chat(user, "<span class='notice'>It's currently outputting products in the direction of [dir2text(outputdir)].</span>")
+	to_chat(user, "<span class='notice'>Alt click the machine to configure settings!</span>")
+	if(get_dist(src, user) < 2)
+		to_chat(user, "This machine seems to be outputting information about it's current status described in the following:")
+		to_chat(user, "<span class='notice'>It's currently outputting products in the direction of <span class='bold'>[dir2text(outputdir)].</span></span>")
+		return TRUE
+	else
+		to_chat(user, "If you get closer to this machine, you can perhaps figure out more information about it's current status.")
+		return FALSE
+
 
 /obj/machinery/automation/Bumped(atom/input)
 	if(!((get_dir(src, input) == outputdir)))
@@ -46,6 +57,8 @@
 	return ..()
 
 /obj/machinery/automation/proc/MakeRadial(mob/living/user)
+	return
+	/*
 	var/category = show_radial_menu(user, src, radial_categories, null, require_near = TRUE)
 	if(category)
 		switch(category)
@@ -53,3 +66,4 @@
 				var/i_or_o = show_radial_menu(user, src, i_o_radial_options, null, require_near = TRUE)
 				if(i_or_o)
 					return
+	*/

@@ -9,13 +9,42 @@
 	name = "automatic chem filter"
 	desc = "A machine used for the filteration of inputted reagent containers."
 	var/current_mode = FILTER_INTO //filter_out is the other possible one
-	var/current_chem_macro = "eznutriment=5"
+	var/current_chem_macro = ""
+	radial_categories = list(
+	"Toggle Filter Type",
+	"Change Macro"
+	)
 
 /obj/machinery/automation/chem_filter/Bumped(atom/movable/input)
 	var/obj/item/I = input
 	if(istype(I) && I.reagents && current_chem_macro)
 		contents += I //We add it to ourself later for processing
 	..()
+
+/obj/machinery/automation/chem_filter/Initialize()
+	. = ..()
+	radial_categories["Toggle Filter Type"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_toggle_filter")
+	radial_categories["Change Macro"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_macro")
+
+/obj/machinery/automation/chem_filter/MakeRadial(mob/living/user)
+	var/category = show_radial_menu(user, src, radial_categories, null, require_near = TRUE)
+	if(category)
+		switch(category)
+			if("Change Macro")
+				current_chem_macro = stripped_input(usr,"Recipe","Insert the chem macro with chem IDs")
+			if("Toggle Filter Type")
+				if(current_mode) //If FILTER_OUT
+					current_mode = FILTER_INTO
+					to_chat(user, "<span class='notice'>You set the filteration to the FILTER INTO chem setting.</span>")
+				else
+					current_mode = FILTER_OUT
+					to_chat(user, "<span class='notice'>You set the filteration to the FILTER OUT chem setting.</span>")
+
+/obj/machinery/automation/chem_filter/examine(mob/user)
+	. = ..()
+	if(.)
+		to_chat(user, "<span class='notice'>Current chem filter setting: <span class='bold'>[current_mode ? "Filtering into" : "Filtering out"]</span> the chem macro set.</span>")
+		to_chat(user, "<span class='notice'>Current chem macro: <span class='bold'>[current_chem_macro ? current_chem_macro : "No chem macro set"]</span></span>")
 
 /obj/machinery/automation/chem_filter/process()
 	..()
