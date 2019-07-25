@@ -12,6 +12,11 @@
 	"Change Container Output"
 	)
 
+	var/list/valid_containers = list(
+	new/obj/item/reagent_containers/pill(),
+	new/obj/item/reagent_containers/pill/patch()
+	)
+
 /obj/machinery/automation/grinder/examine(mob/user)
 	. = ..()
 	if(.)
@@ -23,19 +28,23 @@
 	if(category)
 		switch(category)
 			if("Change Output Name")
-				name_of_output = stripped_input(usr,"Putting in nothing will use the default naming scheme (name of main reagent + unit amount)","Input a custom name!", "", MAX_NAME_LEN)
+				name_of_output = stripped_input(user,"Putting in nothing will use the default naming scheme (name of main reagent + unit amount)","Input a custom name!", "", MAX_NAME_LEN)
 
 			if("Change Transfer Rate")
-				amount_to_transfer = CLAMP(round(input(usr, "The max amount of reagents that can be put inside is [output_container.reagents.maximum_volume]u.", "How many units to transfer?") as num|null), 0, output_container.reagents.maximum_volume)
+				amount_to_transfer = CLAMP(round(input(user, "The max amount of reagents that can be put inside is [output_container.reagents.maximum_volume]u.", "How many units to transfer?") as num|null), 0, output_container.reagents.maximum_volume)
 
-			//if("Change Container Output")
-
+			if("Change Container Output")
+				var/list/some_names = list()
+				for(var/obj/item/thing in valid_containers)
+					some_names += thing.name
+				output_container = valid_containers[input(user, "What container should be outputted when threshold met?", "Pick a container!") in some_names]
 
 /obj/machinery/automation/grinder/Initialize()
 	. = ..()
 	create_reagents(10000) //Because of the way this machine would work, all of this would be constantly be outputting anyway, or you could just use this as a unpowered 1000 unit vat
-	radial_categories["Change Output Name"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_name")
+	radial_categories["Change Output Name"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_label")
 	radial_categories["Change Transfer Rate"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_transfer_rate")
+	radial_categories["Change Container Output"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_container")
 
 /obj/machinery/automation/grinder/Bumped(atom/input)
 	var/obj/item/I = input

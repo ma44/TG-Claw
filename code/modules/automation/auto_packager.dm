@@ -3,8 +3,8 @@
 /obj/machinery/automation/packager
 	name = "packager"
 	desc = "Takes items and puts them into cardboard boxes."
-	var/package_type = /obj/item/storage/box
-	var/current_package
+	var/obj/package_type = /obj/item/storage/box
+	var/obj/current_package
 	var/box_is_full = FALSE //So we can output it every process() instead of every Bumped()
 	var/dispense_at_item_amount = 0 //If it's at zero, we output only when it fails to insert anything
 	radial_categories = list(
@@ -21,7 +21,7 @@
 /obj/machinery/automation/packager/examine(mob/user)
 	. = ..()
 	if(.)
-		to_chat(user, "<span class='notice'>Current container type: <span class='bold'>[package_type ? "[package_type.name]" : "No package selected!!!"]</span></span>")
+		to_chat(user, "<span class='notice'>Current container type: <span class='bold'>[current_package ? "[current_package.name]" : "No package selected!!!"]</span></span>")
 		to_chat(user, "<span class='notice'>Current Item Threshold: <span class='bold'>[dispense_at_item_amount ? "[dispense_at_item_amount] items" : "as many items into the box as possible"]</span></span>")
 
 /obj/machinery/automation/packager/MakeRadial(mob/living/user)
@@ -30,13 +30,14 @@
 		switch(category)
 			if("Adjust Item Threshold")
 				if(istype(current_package, /obj/item/storage))
-					var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
+					var/obj/item/storage/current_package2 = current_package
+					var/datum/component/storage/compon_storage = current_package2.GetComponent(/datum/component/storage)
 					dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, compon_storage.max_items)
 				else
-					var/obj/structure/closet/current_package2 = currentpackage
+					var/obj/structure/closet/current_package2 = current_package
 					dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, current_package2.storage_capacity)
 
-
+			//("Change Container Type")
 
 //Outputs the package and inits it again
 /obj/machinery/automation/packager/proc/output_package()
@@ -49,16 +50,18 @@
 	if(isitem(input))
 		var/obj/item/item = input
 		if(istype(current_package, /obj/item/storage))
-			var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
+			var/obj/item/storage/current_package2 = current_package
+			var/datum/component/storage/compon_storage = current_package2.GetComponent(/datum/component/storage)
 			if(compon_storage && compon_storage.max_w_class >= item.w_class)
-				if(!SEND_SIGNAL(current_package, COMSIG_TRY_STORAGE_INSERT, item, null, FALSE, FALSE)) //If it can't fit inside the box because not enough space, output box
+				if(!SEND_SIGNAL(current_package2, COMSIG_TRY_STORAGE_INSERT, item, null, FALSE, FALSE)) //If it can't fit inside the box because not enough space, output box
 					box_is_full = TRUE
 					return
 
 		else
 			if(istype(current_package, /obj/structure/closet))
-				if(current_package.contents.len + 1 < dispense_at_item_amount)
-					current_package.insert(item)
+				var/obj/structure/closet/current_package2 = current_package
+				if(current_package2.contents.len + 1 < dispense_at_item_amount)
+					current_package2.insert(item)
 				else
 					box_is_full = TRUE
 	..()
@@ -78,12 +81,12 @@
 			if(box_is_full || compon_storage.max_combined_w_class == sum_w_class || source_real_location.contents.len >= compon_storage.max_items)
 				output_package()
 	else
-		if(istype(current_package, /obj/structure/locker))
-			var/obj/structure/locker/box = current_package
-			if(dispense_at_item_amount && box.len >= dispense_at_item_amount)
+		if(istype(current_package, /obj/structure/closet))
+			var/obj/structure/closet/box = current_package
+			if(dispense_at_item_amount && box.contents.len >= dispense_at_item_amount)
 				output_package()
 			else
-				if(box.len == box.storage_capacity)
+				if(box.contents.len >= box.storage_capacity)
 					output_package()
 
 /obj/machinery/automation/packager/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)
@@ -107,6 +110,6 @@
 				var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
 				dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, compon_storage.max_items)
 			else
-				var/obj/structure/closet/current_package2 = currentpackage
+				var/obj/structure/closet/current_package2 = current_package
 				dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, current_package2.storage_capacity)
 	update_icon()
