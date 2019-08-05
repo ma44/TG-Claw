@@ -10,6 +10,7 @@
 	speed_process = TRUE //Every 0.2 seconds instead of 2
 	var/list/radial_categories = list(
 	)
+	var/current_work_tick = 0 //Don't want to do stuff every 0.2 seconds? throw a % at it
 
 	/*
 	var/list/i_o_radial_options = list(
@@ -25,6 +26,11 @@
 	i_o_radial_options["Change Input"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_input")
 	i_o_radial_options["Change Output"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_output")
 	*/
+
+/obj/machinery/automation/process()
+	. = ..()
+	if(.)
+		current_work_tick += 1
 
 /obj/machinery/automation/examine(mob/user)
 	..()

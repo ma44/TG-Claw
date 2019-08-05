@@ -1347,6 +1347,7 @@
 #include "code\modules\automation\auto_grinder.dm"
 #include "code\modules\automation\auto_labeler.dm"
 #include "code\modules\automation\auto_packager.dm"
+#include "code\modules\automation\auto_splitter.dm"
 #include "code\modules\automation\auto_wrapper.dm"
 #include "code\modules\automation\automation.dm"
 #include "code\modules\awaymissions\bluespaceartillery.dm"
