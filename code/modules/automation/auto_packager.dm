@@ -11,17 +11,23 @@
 	"Change Container Type",
 	"Adjust Item Threshold"
 	)
+	var/list/possible_choices = list(
+	new/obj/item/storage/box(),
+	new/obj/structure/closet(),
+	new/obj/structure/closet/crate())
 
 /obj/machinery/automation/packager/Initialize()
 	. = ..()
 	current_package = new package_type
 	radial_categories["Change Container Type"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_container")
 	radial_categories["Adjust Item Threshold"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_threshold")
+	for(var/obj/storage_type in possible_choices)
+		possible_choices[storage_type] = image(storage_type)
 
 /obj/machinery/automation/packager/examine(mob/user)
 	. = ..()
 	if(.)
-		to_chat(user, "<span class='notice'>Current container type: <span class='bold'>[current_package ? "[current_package.name]" : "No package selected!!!"]</span></span>")
+		to_chat(user, "<span class='notice'>Current container type: <span class='bold'>[package_type ? "[package_type.name]" : "No package selected!!!"]</span></span>")
 		to_chat(user, "<span class='notice'>Current Item Threshold: <span class='bold'>[dispense_at_item_amount ? "[dispense_at_item_amount] items" : "as many items into the box as possible"]</span></span>")
 
 /obj/machinery/automation/packager/MakeRadial(mob/living/user)
@@ -32,12 +38,17 @@
 				if(istype(current_package, /obj/item/storage))
 					var/obj/item/storage/current_package2 = current_package
 					var/datum/component/storage/compon_storage = current_package2.GetComponent(/datum/component/storage)
-					dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, compon_storage.max_items)
+					dispense_at_item_amount = CLAMP(round(input(user, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, compon_storage.max_items)
 				else
-					var/obj/structure/closet/current_package2 = current_package
-					dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, current_package2.storage_capacity)
+					if(istype(current_package, /obj/structure/closet))
+						var/obj/structure/closet/current_package2 = current_package
+						dispense_at_item_amount = CLAMP(round(input(user, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, current_package2.storage_capacity)
 
-			//("Change Container Type")
+			if("Change Container Type")
+				var/obj/storage_choice = show_radial_menu(user, src, possible_choices, null, require_near = TRUE)
+				if(storage_choice && storage_choice in possible_choices)
+					package_type = storage_choice
+					to_chat(user, "You set the package to output to <span class='bold'>[package_type.name]</span>.")
 
 //Outputs the package and inits it again
 /obj/machinery/automation/packager/proc/output_package()
