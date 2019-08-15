@@ -19,6 +19,9 @@
 	)
 	*/
 
+/obj/machinery/automation/RefreshParts()
+	..()
+
 /obj/machinery/automation/Initialize()
 	. = ..()
 	/*
@@ -42,7 +45,6 @@
 	else
 		to_chat(user, "If you get closer to this machine, you can perhaps figure out more information about it's current status.")
 		return FALSE
-
 
 /obj/machinery/automation/Bumped(atom/input)
 	if(!((get_dir(src, input) == outputdir)))

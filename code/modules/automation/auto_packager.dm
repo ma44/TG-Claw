@@ -55,6 +55,13 @@
 	current_package.loc = get_step(src, outputdir)
 	playsound(loc, 'sound/machines/ping.ogg', 30, 1)
 	current_package = new package_type
+	if(istype(current_package, /obj/structure/closet))
+		var/obj/structure/closet/closet = current_package
+		closet.material_drop_amount = 0 //No dropping the materials when destroyed
+	else
+		if(istype(current_package, /obj/item/storage/box))
+			var/obj/item/storage/box/box = current_package
+			current_package.foldable = null //No folding that box into anything either
 	box_is_full = FALSE
 
 /obj/machinery/automation/packager/Bumped(atom/input)
