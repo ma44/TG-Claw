@@ -67,7 +67,10 @@
 
 #define TECHWEB_POINT_TYPE_DEFAULT TECHWEB_POINT_TYPE_GENERIC
 
+#define TECHWEB_POINT_TYPE_AUTOMATION "Automation Research"
+
 //defined here so people don't forget to change this!
 #define TECHWEB_POINT_TYPE_LIST_ASSOCIATIVE_NAMES list(\
-	TECHWEB_POINT_TYPE_GENERIC = "General Research"\
+	TECHWEB_POINT_TYPE_GENERIC = "General Research",\
+	TECHWEB_POINT_TYPE_AUTOMATION = "Automation Research"\
 	)

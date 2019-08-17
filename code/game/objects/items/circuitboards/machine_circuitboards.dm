@@ -1,3 +1,69 @@
+/obj/item/circuitboard/machine/automation/chem_filter
+	name = "Automatic Chem Filter (Machine Board)"
+	build_path = /obj/machinery/automation/chem_filter
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 1,
+		/obj/item/stock_parts/manipulator = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1
+		)
+
+/obj/item/circuitboard/machine/automation/packager
+	name = "Automatic Packager (Machine Board)"
+	build_path = /obj/machinery/automation/packager
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 1,
+		/obj/item/stock_parts/manipulator = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1
+		)
+
+/obj/item/circuitboard/machine/automation/wrapper
+	name = "Automatic Wrapper (Machine Board)"
+	build_path = /obj/machinery/automation/wrapper
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 1,
+		/obj/item/stock_parts/manipulator = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1
+		)
+
+/obj/item/circuitboard/machine/automation/label
+	name = "Automatic Labeler (Machine Board)"
+	build_path = /obj/machinery/automation/label
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 1,
+		/obj/item/stock_parts/manipulator = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1
+		)
+
+/obj/item/circuitboard/machine/automation/grinder
+	name = "Automatic Grinder (Machine Board)"
+	build_path = /obj/machinery/automation/grinder
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 1,
+		/obj/item/stock_parts/manipulator = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1
+		)
+
+/obj/item/circuitboard/machine/automation/crafter
+	name = "Automatic Crafter (Machine Board)"
+	build_path = /obj/machinery/automation/crafter
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 1,
+		/obj/item/stock_parts/manipulator = 1,
+		/obj/item/stock_parts/scanning_module = 1,
+		/obj/item/stock_parts/micro_laser = 1,
+		/obj/item/stock_parts/capacitor = 1
+		)
+
 /obj/item/circuitboard/machine/sleeper
 	name = "Sleeper (Machine Board)"
 	build_path = /obj/machinery/sleeper

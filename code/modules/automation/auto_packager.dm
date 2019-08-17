@@ -61,7 +61,7 @@
 	else
 		if(istype(current_package, /obj/item/storage/box))
 			var/obj/item/storage/box/box = current_package
-			current_package.foldable = null //No folding that box into anything either
+			box.foldable = null //No folding that box into anything either
 	box_is_full = FALSE
 
 /obj/machinery/automation/packager/Bumped(atom/input)

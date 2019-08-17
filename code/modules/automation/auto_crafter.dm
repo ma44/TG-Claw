@@ -1,6 +1,6 @@
 //Checks every process() to see if it has the allowed ingredients inside of it's contents to then craft a thing
 
-/obj/machinery/automation/autocrafter //Takes a recipe datum, accepts ingredients for them and makes it
+/obj/machinery/automation/crafter //Takes a recipe datum, accepts ingredients for them and makes it
 	name = "autocrafter"
 	desc = "Takes in ingredients and outputs products."
 	var/datum/crafting_recipe/currentrecipe = new/datum/crafting_recipe/healpowder() //Testing purposes
@@ -10,15 +10,15 @@
 	radial_categories = list(
 	"Change Crafting Recipe")
 
-/obj/machinery/automation/autocrafter/Initialize()
+/obj/machinery/automation/crafter/Initialize()
 	. = ..()
 	radial_categories["Change Crafting Recipe"] = image(icon = 'icons/mob/radial.dmi', icon_state = "auto_change_output")
 
-/obj/machinery/automation/autocrafter/examine(mob/user)
+/obj/machinery/automation/crafter/examine(mob/user)
 	..()
 	to_chat(user, "<span class='notice'>This [src] is currently producing a recipe called <span class='bold'>[currentrecipe.name]</span></span>")
 
-/obj/machinery/automation/autocrafter/MakeRadial(mob/living/user)
+/obj/machinery/automation/crafter/MakeRadial(mob/living/user)
 	var/category = show_radial_menu(user, src, radial_categories, null, require_near = TRUE)
 	if(category)
 		switch(category)
@@ -42,14 +42,14 @@
 						currentrecipe = recipe_chosen
 						to_chat(user, "You set the recipe to [currentrecipe.name].")
 
-/obj/machinery/automation/autocrafter/process()
+/obj/machinery/automation/crafter/process()
 	possible_item = craftproc.construct_item(src, currentrecipe)
 	if(isobj(possible_item)) //The returned one can either be null, a string or the object itself; the object itself means it's crafted
 		possible_item.loc = get_step(src, outputdir)
 	possible_item = null
 	..()
 
-/obj/machinery/automation/autocrafter/Bumped(atom/input)
+/obj/machinery/automation/crafter/Bumped(atom/input)
 	for(var/ingredients in currentrecipe.reqs)
 		if(istype(input, ingredients))
 			contents += input
