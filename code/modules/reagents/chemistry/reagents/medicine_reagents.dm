@@ -224,7 +224,7 @@
 	reagent_state = LIQUID
 	color = "#C8A5DC"
 
-/datum/reagent/medicine/silver_sulfadiazine/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+/datum/reagent/medicine/silver_sulfadiazine/reaction_mob(mob/living/M, method=PATCH, reac_volume, show_message = 1)
 	if(iscarbon(M))
 		if (M.stat == DEAD)
 			show_message = FALSE
@@ -233,14 +233,14 @@
 			if(show_message)
 				to_chat(M, "<span class='warning'>You don't feel so good...</span>")
 		else if(M.getFireLoss())
-			M.adjustFireLoss(-reac_volume)
+			M.adjustFireLoss()
 			if(show_message)
 				to_chat(M, "<span class='danger'>You feel your burns healing! It stings like hell!</span>")
 				M.emote("scream")
 	..()
 
 /datum/reagent/medicine/silver_sulfadiazine/on_mob_life(mob/living/M)
-	M.adjustFireLoss(-2*REM, 0)
+	M.adjustFireLoss(-2.5*REM, 0)
 	..()
 	. = 0.5
 
@@ -274,7 +274,7 @@
 	reagent_state = LIQUID
 	color = "#FF9696"
 
-/datum/reagent/medicine/styptic_powder/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+/datum/reagent/medicine/styptic_powder/reaction_mob(mob/living/M, method=PATCH, reac_volume, show_message = 1)
 	if(iscarbon(M))
 		if (M.stat == DEAD)
 			show_message = FALSE
@@ -283,14 +283,14 @@
 			if(show_message)
 				to_chat(M, "<span class='warning'>You don't feel so good...</span>")
 		else if(M.getBruteLoss())
-			M.adjustBruteLoss(-reac_volume)
+			M.adjustBruteLoss()
 			if(show_message)
 				to_chat(M, "<span class='danger'>You feel your bruises healing! It stings like hell!</span>")
 				M.emote("scream")
 	..()
 
 /datum/reagent/medicine/styptic_powder/on_mob_life(mob/living/M)
-	M.adjustBruteLoss(-2*REM, 0)
+	M.adjustBruteLoss(-2.5*REM, 0)
 	..()
 	. = 0.5
 
@@ -380,6 +380,7 @@
 	description = "Has a 100% chance of instantly healing brute and burn damage. One unit of the chemical will heal one point of damage. Touch application only."
 	reagent_state = LIQUID
 	color = "#FFEBEB"
+	overdose_threshold = 10
 
 /datum/reagent/medicine/synthflesh/reaction_mob(mob/living/M, method=TOUCH, reac_volume,show_message = 1)
 	if(iscarbon(M))
@@ -391,6 +392,11 @@
 			if(show_message)
 				to_chat(M, "<span class='danger'>You feel your burns and bruises healing! It stings like hell!</span>")
 	..()
+
+/datum/reagent/medicine/synthflesh/overdose_process(mob/living/M)
+	M.adjustToxLoss(0.75*REM, 0)
+	..()
+	. = 0.5
 
 /datum/reagent/medicine/charcoal
 	name = "Charcoal"
@@ -1278,19 +1284,20 @@
 /datum/reagent/medicine/stimpak/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
 	if(iscarbon(M) && M.stat != DEAD)
 		if(method in list(INGEST, VAPOR))
-			M.adjustToxLoss(0.5*reac_volume)
+			M.adjustToxLoss(3.75*reac_volume) //increased from 0.5*reac_volume, which was amusingly low since stimpak heals toxins. now a pill at safe max crits and then heals back up to low health within a few seconds
 			if(show_message)
 				to_chat(M, "<span class='warning'>You don't feel so good...</span>")
 	..()
 
 /datum/reagent/medicine/stimpak/on_mob_life(mob/living/carbon/M)
-	M.adjustBruteLoss(-4*REM, 0)
-	M.adjustFireLoss(-4*REM, 0)
-	M.adjustToxLoss(-1*REM, 0)
-	M.AdjustStun(-5, 0)
-	M.AdjustKnockdown(-5, 0)
-	M.adjustStaminaLoss(-2*REM, 0)
-	. = 1
+	if(!M.reagents.has_reagent("healing_powder")) // We don't want these healing items to stack, so we only apply the healing if these chems aren't found.We only check for the less powerful chems, so the least powerful one always heals.
+		M.adjustBruteLoss(-4*REM, 0)
+		M.adjustFireLoss(-4*REM, 0)
+		M.adjustToxLoss(-1*REM, 0)
+		M.AdjustStun(-5, 0)
+		M.AdjustKnockdown(-5, 0)
+		M.adjustStaminaLoss(-2*REM, 0)
+		. = 1
 	..()
 
 /datum/reagent/medicine/stimpak/overdose_process(mob/living/M)
@@ -1309,19 +1316,44 @@ datum/reagent/medicine/super_stimpak
 	overdose_threshold = 20
 
 datum/reagent/medicine/super_stimpak/on_mob_life(mob/living/M)
-	M.adjustBruteLoss(-6*REM)
-	M.adjustFireLoss(-6*REM)
-	M.adjustOxyLoss(-2*REM)
-	M.adjustToxLoss(-2*REM, 0)
-	M.AdjustStun(-10, 0)
-	M.AdjustKnockdown(-10, 0)
-	M.adjustStaminaLoss(-4*REM, 0)
-	. = 1
+	if(!M.reagents.has_reagent("healing_poultice") && !M.reagents.has_reagent("stimpak") && !M.reagents.has_reagent("healing_powder")) // We don't want these healing items to stack, so we only apply the healing if these chems aren't found. We only check for the less powerful chems, so the least powerful one always heals.
+		M.adjustBruteLoss(-6*REM)
+		M.adjustFireLoss(-6*REM)
+		M.adjustOxyLoss(-2*REM)
+		M.adjustToxLoss(-2*REM, 0)
+		M.AdjustStun(-10, 0)
+		M.AdjustKnockdown(-10, 0)
+		M.adjustStaminaLoss(-4*REM, 0)
+		. = 1
 	..()
 
 /datum/reagent/medicine/super_stimpak/overdose_process(mob/living/M)
 	M.adjustToxLoss(10*REM, 0)
 	M.adjustOxyLoss(12*REM, 0)
+	..()
+	. = 1
+
+/datum/reagent/medicine/bitter_drink
+	name = "bitter drink"
+	id = "bitter_drink"
+	description = "An herbal healing concoction which enables wounded soldiers and travelers to tend to their wounds without stopping during journeys."
+	reagent_state = LIQUID
+	color ="#A9FBFB"
+	taste_description = "bitterness"
+	metabolization_rate = 0.4 * REAGENTS_METABOLISM //in between powder/stimpaks and poultice/superstims?
+	overdose_threshold = 30
+
+datum/reagent/medicine/bitter_drink/on_mob_life(mob/living/M)
+	if(!M.reagents.has_reagent("stimpak") && !M.reagents.has_reagent("healing_powder")) //should prevent stacking with healing powder and stimpaks
+		M.adjustFireLoss(-3*REM)
+		M.adjustBruteLoss(-3*REM)
+		M.hallucination = max(M.hallucination, 5)
+		. = 1
+	..()
+
+/datum/reagent/medicine/bitter_drink/overdose_process(mob/living/M)
+	M.adjustToxLoss(2*REM, 0)
+	M.adjustOxyLoss(4*REM, 0)
 	..()
 	. = 1
 
@@ -1342,6 +1374,14 @@ datum/reagent/medicine/super_stimpak/on_mob_life(mob/living/M)
 	. = 1
 	..()
 
+/datum/reagent/medicine/healing_powder/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+	if(iscarbon(M) && M.stat != DEAD)
+		if(method in list(INGEST, VAPOR, INJECT))
+			M.adjustToxLoss(3*reac_volume) //also increased from 0.5, reduced from 6
+			if(show_message)
+				to_chat(M, "<span class='warning'>You don't feel so good...</span>")
+	..()
+
 /datum/reagent/medicine/healing_powder/overdose_process(mob/living/M)
 	M.adjustToxLoss(2*REM, 0)
 	M.adjustOxyLoss(4*REM, 0)
@@ -1358,10 +1398,19 @@ datum/reagent/medicine/super_stimpak/on_mob_life(mob/living/M)
 	overdose_threshold = 20
 
 /datum/reagent/medicine/healing_poultice/on_mob_life(mob/living/M)
-	M.adjustFireLoss(-4*REM)
-	M.adjustBruteLoss(-4*REM)
-	M.adjustOxyLoss(-2*REM)
-	M.hallucination = max(M.hallucination, 5)
+	if(!M.reagents.has_reagent("stimpak") && !M.reagents.has_reagent("healing_powder")) // We don't want these healing items to stack, so we only apply the healing if these chems aren't found. We only check for the less powerful chems, so the least powerful one always heals.
+		M.adjustFireLoss(-4*REM)
+		M.adjustBruteLoss(-4*REM)
+		M.adjustOxyLoss(-2*REM)
+		M.hallucination = max(M.hallucination, 5)
+	..()
+
+/datum/reagent/medicine/healing_poultice/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+	if(iscarbon(M) && M.stat != DEAD)
+		if(method in list(INGEST, VAPOR, INJECT))
+			M.adjustToxLoss(4.5*reac_volume) //changed from 0.5*reac_volume, reduced from 6
+			if(show_message)
+				to_chat(M, "<span class='warning'>You don't feel so good...</span>")
 	..()
 
 /datum/reagent/medicine/radx
@@ -1412,13 +1461,13 @@ datum/reagent/medicine/super_stimpak/on_mob_life(mob/living/M)
 	if(isliving(M))
 		var/mob/living/carbon/L = M
 		L.hal_screwyhud = SCREWYHUD_HEALTHY
-		L.add_trait(TRAIT_IGNORESLOWDOWN, id)
+		L.add_trait(TRAIT_IGNOREDAMAGESLOWDOWN, id)
 
 /datum/reagent/medicine/medx/on_mob_delete(mob/M)
 	if(isliving(M))
 		var/mob/living/carbon/L = M
 		L.hal_screwyhud = SCREWYHUD_NONE
-		L.remove_trait(TRAIT_IGNORESLOWDOWN, id)
+		L.remove_trait(TRAIT_IGNOREDAMAGESLOWDOWN, id)
 	..()
 
 /datum/reagent/medicine/medx/on_mob_life(mob/living/carbon/M)
@@ -1484,13 +1533,13 @@ datum/reagent/medicine/super_stimpak/on_mob_life(mob/living/M)
 	if(isliving(M))
 		var/mob/living/carbon/L = M
 		L.hal_screwyhud = SCREWYHUD_HEALTHY
-		L.add_trait(TRAIT_IGNORESLOWDOWN, id)
+		L.add_trait(TRAIT_IGNOREDAMAGESLOWDOWN, id)
 
 /datum/reagent/medicine/legionmedx/on_mob_delete(mob/M)
 	if(isliving(M))
 		var/mob/living/carbon/L = M
 		L.hal_screwyhud = SCREWYHUD_NONE
-		L.remove_trait(TRAIT_IGNORESLOWDOWN, id)
+		L.remove_trait(TRAIT_IGNOREDAMAGESLOWDOWN, id)
 	..()
 
 /datum/reagent/medicine/legionmedx/on_mob_life(mob/living/carbon/M)
