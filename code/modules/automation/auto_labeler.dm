@@ -54,19 +54,3 @@
 	if(isitem(input) || istype(input, /obj/structure/closet/crate))
 		contents += input
 	..()
-
-/obj/machinery/automation/label/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)
-  ui = SStgui.try_update_ui(user, src, ui_key, ui, force_open)
-  if(!ui)
-    ui = new(user, src, ui_key, "auto_labeler", "Automatic Labeling Machine", 600, 800, master_ui, state)
-    ui.open()
-
-/obj/machinery/automation/label/ui_data(mob/user)
-	var/list/data = list()
-	data["current_label"] = to_label_on
-	return data
-
-/obj/machinery/automation/label/ui_act(action, params)
-	if("change_name")
-		to_label_on = stripped_input(usr,"New label: ","Input a custom label!", "", MAX_NAME_LEN)
-		. = TRUE

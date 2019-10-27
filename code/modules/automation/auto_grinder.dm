@@ -74,34 +74,3 @@
 		else
 			outputed_container.name = trim("[outputed_container.reagents.get_master_reagent_name()] ([amount_to_transfer]u)")
 	..()
-
-/obj/machinery/automation/grinder/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)
-  if(!ui)
-    ui = new(user, src, ui_key, "auto_grinder", "Automatic Grinder Machine", 600, 800, master_ui, state)
-    ui.open()
-
-/obj/machinery/automation/grinder/ui_data(mob/user)
-	var/list/data = list()
-	data["name_of_output"] = name_of_output
-	data["current_output"] = output_container.name
-	data["current_amount_to_dispense"] = amount_to_transfer
-	return data
-
-/obj/machinery/automation/grinder/ui_act(action, params)
-	if(..())
-		return
-	switch(action)
-		if("change_name")
-			name_of_output = stripped_input(usr,"Putting in nothing will use the default naming scheme (name of main reagent + unit amount)","Input a custom name!", "", MAX_NAME_LEN)
-			. = TRUE
-		if("change_output")
-			switch(params["output_container"])
-				if("pill")
-					output_container = new/obj/item/reagent_containers/pill()
-				if("patch")
-					output_container = new/obj/item/reagent_containers/pill/patch()
-			. = TRUE
-		if("change_amount")
-			amount_to_transfer = CLAMP(round(input(usr, "The max amount of reagents that can be put inside is [output_container.reagents.maximum_volume]u.", "How many units to transfer?") as num|null), 0, output_container.reagents.maximum_volume)
-			. = TRUE
-	update_icon()

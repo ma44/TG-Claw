@@ -106,28 +106,3 @@
 			else
 				if(box.contents.len >= box.storage_capacity)
 					output_package()
-
-/obj/machinery/automation/packager/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)
-  ui = SStgui.try_update_ui(user, src, ui_key, ui, force_open)
-  if(!ui)
-    ui = new(user, src, ui_key, "auto_packager", "Automatic Packager Machine", 600, 800, master_ui, state)
-    ui.open()
-
-/obj/machinery/automation/packager/ui_data(mob/user)
-	var/list/data = list()
-	data["current_package"] = current_package.name
-	data["dispense_at_item_amount"] = dispense_at_item_amount
-	return data
-
-/obj/machinery/automation/packager/ui_act(action, params)
-	if(..())
-		return
-	switch(action)
-		if("change_item_amount_dispense")
-			if(istype(current_package, /obj/item/storage))
-				var/datum/component/storage/compon_storage = current_package.GetComponent(/datum/component/storage)
-				dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, compon_storage.max_items)
-			else
-				var/obj/structure/closet/current_package2 = current_package
-				dispense_at_item_amount = CLAMP(round(input(usr, "Put 0 as the amount of items if you wish for the box to be outputted as soon as it's full.", "How many items?") as num|null), 0, current_package2.storage_capacity)
-	update_icon()
